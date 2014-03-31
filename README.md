@@ -161,7 +161,8 @@ The predefined query from `search_metadata` property of existing search results 
 
 Bugs reporting/tracking: [Github Repo Issues](https://github.com/jabranr/fetchwitter/issues)
 
-Contributions are welcome. In order to contribute, fork the repository, create a new branch and after when you have a contribution ready then make a pull request. I will be reviewed and merged with contributor's credit. To keep track of the updates and contribution history, no branch will be removed.
+**Contributions are welcome!**
+In order to contribute, fork the repository, create a new branch and after when you have a contribution ready then make a pull request. I will be reviewed and merged with contributor's credit. To keep track of the updates and contribution history, no branch will be removed.
 
 MIT - [http://opensource.org/licenses/MIT](http://opensource.org/licenses/MIT)
 
