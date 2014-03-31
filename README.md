@@ -4,7 +4,7 @@ PHP library to use with Twitter API v1.1
 
 Version: 1.0.0
 
-<blockquote>This is an updated and enhanced version of [existing PHP wrapper](https://github.com/jabranr/twitter-api-v1.1) to fetch Tweets using [Twitter API v1.1](https://dev.twitter.com/docs/api/1.1) (unlike its depreciated API v1) that requires authentication for any kind of requests made to its endpoints.</blockquote>
+<blockquote>This is an updated and enhanced version of <a href="https://github.com/jabranr/twitter-api-v1.1" target="_blank">existing PHP wrapper</a> to fetch Tweets using <a href="https://dev.twitter.com/docs/api/1.1" target="_blank">Twitter API v1.1</a> (unlike its depreciated API v1) that requires authentication for any kind of requests made to its endpoints.</blockquote>
 
 This new PHP class is far better than the existing PHP wrapper in many ways such as:
 
@@ -20,8 +20,8 @@ This new PHP class is far better than the existing PHP wrapper in many ways such
 
 ### Configuration &amp; Initialization
 
-- Register a new app at (Twitter Apps)[https://apps.facebook.com] and get API key and secret.
-- Initialize a new instance of Fetchwitter as follows:
++ Register a new app at [Twitter Apps](https://apps.facebook.com) and get API key and secret.
++ Initialize a new instance of Fetchwitter as follows:
 
 ``` php
 $config = array( 
@@ -158,8 +158,11 @@ The predefined query from `search_metadata` property of existing search results 
 
 ===
 
-Bugs reporting/tracking: 
-Contributions are welcome. To contribute, fork the repository, create a new branch out of Master and after you have done with it, make a pull request. I will be reviewed and merged with contributor's credit. To keep track of the updates and contribution history, no branch will be removed.
+
+Bugs reporting/tracking: [Github Repo Issues](https://github.com/jabranr/fetchwitter/issues)
+
+Contributions are welcome. In order to contribute, fork the repository, create a new branch and after when you have a contribution ready then make a pull request. I will be reviewed and merged with contributor's credit. To keep track of the updates and contribution history, no branch will be removed.
 
 MIT - [http://opensource.org/licenses/MIT](http://opensource.org/licenses/MIT)
+
 &copy; [@jabranr](https://twitter.com/jabranr) - 2014
