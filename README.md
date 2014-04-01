@@ -41,7 +41,7 @@ catch(Exception $e) {
 
 ### How it works?
 
-Once a valid instance of Fetchwitter is created, it automatically goes through an [App-Only Authentication](https://dev.twitter.com/docs/auth/application-only-auth) and gets a valid `access_token` from Twiiter API. The method will throw an Exception in case of any missing parameters or returns error message from API in JSON format otherwise.
+Once a valid instance of Fetchwitter is created, it automatically goes through an [App-Only Authentication](https://dev.twitter.com/docs/auth/application-only-auth) and gets a valid `access_token` from Twitter API. The method will throw an Exception in case of any missing parameters or returns error message from API in JSON format otherwise.
 
 Following methods are available for a valid and successfully established connection with API.
 
