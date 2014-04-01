@@ -54,6 +54,17 @@ Use `to_tweet( $text )` method to convert the static Tweet to formatted Tweet wi
 ``` php
 $tweet = $fetchwitter->to_tweet( string $tweet );
 ```
+
+**Example:**
+
+**Static Tweet as it comes from the API feed:**
+
+This is a #test tweet by @jabranr to confirm methods from #Fetchwitter. More at https://github.com/jabranr/fetchwitter
+
+**Formatted Tweet using `to_tweet()` method:**
+
+This is a [#test](https://twitter.com/search?q=%23test) tweet by [@jabranr](https://twitter.com/jabranr) to confirm methods from [#Fetchwitter](https://twitter.com/search?q=%23Fetchwitter). More at [https://github.com/jabranr/fetchwitter](https://github.com/jabranr/fetchwitter)
+
 ===
 
 #### Get Tweets of a Twiiter user
