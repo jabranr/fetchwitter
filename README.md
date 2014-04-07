@@ -2,8 +2,6 @@
 
 PHP library to use with Twitter API v1.1
 
-Version: 1.0.0
-
 <blockquote>This is an updated and enhanced version of <a href="https://github.com/jabranr/twitter-api-v1.1" target="_blank">existing PHP wrapper</a> to fetch Tweets using <a href="https://dev.twitter.com/docs/api/1.1" target="_blank">Twitter API v1.1</a> (unlike its depreciated API v1) that requires authentication for any kind of requests made to its endpoints.</blockquote>
 
 This new PHP class is far better than the existing PHP wrapper in many ways such as:
@@ -20,7 +18,7 @@ This new PHP class is far better than the existing PHP wrapper in many ways such
 
 ### Configuration &amp; Initialization
 
-+ Register a new app at [Twitter Apps](https://apps.facebook.com) and get API key and secret.
++ Register a new app at [Twitter Application Manager](https://apps.facebook.com) and get API key and secret.
 + Initialize a new instance of Fetchwitter as follows:
 
 ``` php
@@ -37,6 +35,33 @@ catch(Exception $e) {
 	echo $e->getMessage();
 }
 ```
+
+===
+
+### Get or set access token
+
++ If this is a fresh setup, then you can get a new access token using following method:
+
+``` php
+$the_access_token = $fetchwitter->get_new_access_token();
+```
+
++ You can set an access token using following method:
+
+``` php
+# Freshly acquired access token (using above example)
+$fetchwitter->set_access_token( $fetchwitter->get_new_access_token() );
+
+# Already have an access token in cache or database
+$fetchwitter->set_access_token( {access_token} );
+```
+
++ You can access token from current active instance using following method:
+
+``` php
+$the_access_token = $fetchwitter->get_access_token();
+```
+
 ===
 
 ### How it works?

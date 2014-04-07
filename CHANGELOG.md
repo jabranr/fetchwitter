@@ -11,6 +11,13 @@ Version: 1.0.1
 ===
 
 
+Version: 1.0.0
+
++ Version 1.0.0 released
+
+
+===
+
 Bugs reporting/tracking: [Github Repo Issues](https://github.com/jabranr/fetchwitter/issues)
 
 **Contributions are welcome!**
