@@ -3,7 +3,7 @@
 /**
  * Fetchwitter Class
  * @author: hello@jabran.me
- * @version: 1.0.0
+ * @version: 1.0.1
  *
  */
 
@@ -37,8 +37,18 @@ class Fetchwitter {
 		$this->_api_url = 'https://api.twitter.com';
 		$this->_app_oauth_endpoint = '/oauth2/token';
 		$this->_api_endpoint = $this->_api_url . $this->_api_version;
-		
-		return $this->_set_access_token();
+	}
+
+	public function set_access_token( $access_token ) {
+		return $this->_access_token = $access_token;
+	}
+
+	public function get_access_token() {
+		return $this->_access_token;
+	}
+
+	public function get_new_access_token() {
+		return $this->_get_access_token();
 	}
 
 	public function get_by_user( $screen_name = 'jabranr', $count = 10 ) {
