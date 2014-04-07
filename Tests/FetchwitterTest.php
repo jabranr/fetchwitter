@@ -12,6 +12,7 @@ class FetchwitterTest extends PHPUnit_Framework_TestCase {
 			'api_secret' => 'Kxs68MJGHvtTe9CArjLntsc9iVDEygIfqTJlrcqMhLM'
 		);
 		$this->fetchwitter = new Fetchwitter( $this->config );
+		$this->fetchwitter->set_access_token($this->fetchwitter->get_new_access_token());
 	}
 
 	public function tearDown() {
@@ -41,11 +42,11 @@ class FetchwitterTest extends PHPUnit_Framework_TestCase {
 
 	public function testCaseTweetsForToTweetMethod() {
 		return array(
-			array('test tweet', 'test tweet')
-			// array('#Test #tweet', '<a target="_blank" href="https://twitter.com/search?q=%23Test" ref="nofollow">#Test</a> <a target="_blank" href="https://twitter.com/search?q=%23tweet" ref="nofollow">#tweet</a>')
-			// array('@Test @tweet', '<a target="_blank" href="https://twitter.com/Test" ref="nofollow">@Test</a> <a href="https://twitter.com/tweet" ref="nofollow">@tweet</a>'),
-			// array('@Test #tweet', '<a target="_blank" href="https://twitter.com/Test" ref="nofollow">@Test</a> <a href="https://twitter.com/search?q=%23tweet" ref="nofollow">#tweet</a>'),
-			// array('Test tweet at http://example.com', 'Test tweet at <a target="_blank" href="http://example.com" ref="nofollow">http://example.com</a>')
+			array('test tweet', 'test tweet'),
+			array('Follow @jabranr for interesting updates', 'Follow <a target="_blank" href="https://twitter.com/jabranr" rel="nofollow">@jabranr</a> for interesting updates'),
+			array('This tweet includes a #hashtag', 'This tweet includes a <a target="_blank" href="https://twitter.com/search?q=%23hashtag" rel="nofollow">#hashtag</a>'),
+			array('Follow @jabranr for interesting updates. This tweet includes a #hashtag', 'Follow <a target="_blank" href="https://twitter.com/jabranr" rel="nofollow">@jabranr</a> for interesting updates. This tweet includes a <a target="_blank" href="https://twitter.com/search?q=%23hashtag" rel="nofollow">#hashtag</a>'),
+			array('Fetchwitter is available at http://j.mp/fetchwitter', 'Fetchwitter is available at <a target="_blank" href="http://j.mp/fetchwitter" rel="nofollow">http://j.mp/fetchwitter</a>')
 		);
 	}
 }
