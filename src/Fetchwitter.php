@@ -3,7 +3,7 @@
 /**
  * Fetchwitter Class
  * @author: hello@jabran.me
- * @version: 1.0.1
+ * @version: 1.0.2
  *
  */
 
@@ -125,16 +125,15 @@ class Fetchwitter {
 		if ( $response ) {
 			$response = json_decode($response);
 
-			if ( $response && property_exists($response, 'token_type') && $response->token_type === 'bearer' )
-				return $response->access_token;
+			if ( property_exists($response, 'token_type') && $response->token_type === 'bearer' ) {
+				return $this->_access_token = $response->access_token;
+			}
+			else if ( property_exists($response, 'errors') ) {
+				throw new Exception($response->errors[0]->code . ': ' . $response->errors[0]->message);
+				return;
+			}
 		}
 		return false;
-	}
-
-	private function _set_access_token() {
-		if ( empty( $this->_access_token ) ) 
-			return $this->_access_token = $this->_get_access_token();
-		return true;
 	}
 
 	private function _do_curl( $options = array() ) {

@@ -2,6 +2,15 @@
 
 PHP library to use with Twitter API v1.1
 
+
+Version: 1.0.2
+
++ `get_new_access_token` public method is now handled with Exception.
++ `_set_access_token` private method is removed.
++ 
+
+===
+
 Version: 1.0.1
 
 + Additional `get_new_access_token` method to get a new access token

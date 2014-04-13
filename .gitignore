@@ -1,2 +1,9 @@
 .DS_Store
 examples/
+Tests/
+vendor/
+.travis.yml
+composer.json
+composer.lock
+phpunit.xml
+README.md
