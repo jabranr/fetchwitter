@@ -4,19 +4,9 @@ PHP library to use with Twitter API v1.1
 
 <blockquote>This is an updated and enhanced version of <a href="https://github.com/jabranr/twitter-api-v1.1" target="_blank">existing PHP wrapper</a> to fetch Tweets using <a href="https://dev.twitter.com/docs/api/1.1" target="_blank">Twitter API v1.1</a> (unlike its depreciated API v1) that requires authentication for any kind of requests made to its endpoints.</blockquote>
 
-This new PHP class is far better than the existing PHP wrapper in many ways such as:
-
-+ Written in OOPHP for convenient use and easy adaptation
-+ Improved methods with more options
-+ Improved methods to convert the static Tweet into formatted Tweet
-+ New method to search Tweets with any query
-+ New method to paginate through search results
-
 <blockquote>The authentication flow only uses the App-Only Authentication.</blockquote>
 
-## Documentation
-
-### Basic Example
+## Basic Example
 
 Here is a very basic example to start with.
 
@@ -58,6 +48,8 @@ if ( isset($fw) && $fw ) {
 }
 
 ```
+
+## Documentation
 
 ### Configuration &amp; Initialization
 
