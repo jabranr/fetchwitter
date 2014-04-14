@@ -14,7 +14,8 @@ Here is a very basic example to start with.
 // Configurations
 $config = array(
 	'api_key' => 'API_KEY_HERE',
-	'api_secret' => 'API_SECRET_HERE'
+	'api_secret' => 'API_SECRET_HERE',
+	'count' => '5'
 );
 
 // Setup a new instance of Fetchwitter
@@ -64,7 +65,7 @@ $config = array(
 );
 
 try {
-	$fetchwitter = new Fetchwitter( $config );
+	$fetchwitter = new Fetchwitter( array $config );
 }
 catch(Exception $e) {
 	echo $e->getMessage();
@@ -90,7 +91,7 @@ catch(Exception $e) {
 
 ``` php
 # Already have an access token in cache or database
-$fetchwitter->set_access_token( {access_token} );
+$fetchwitter->set_access_token( string $existingAccessToken );
 ```
 
 + You can access token from current active instance using following method:
@@ -103,7 +104,9 @@ $the_access_token = $fetchwitter->get_access_token();
 
 ### How it works?
 
-Once a valid instance of Fetchwitter is created, it automatically goes through an [App-Only Authentication](https://dev.twitter.com/docs/auth/application-only-auth) and gets a valid `access_token` from Twitter API. The method will throw an Exception in case of any missing parameters or returns error message from API in JSON format otherwise.
+Once a valid instance of Fetchwitter is created, it automatically goes through an [App-Only Authentication](https://dev.twitter.com/docs/auth/application-only-auth) and gets a valid `access_token` from Twitter API or returns appropriate error message in case of failure. 
+
+<blockquote>The method will throw an Exception in case of any missing parameters or returns error message from API in JSON format otherwise.</blockquote>
 
 Following methods are available for a valid and successfully established connection with API.
 
@@ -232,7 +235,7 @@ The predefined query from `search_metadata` property of existing search results 
 ===
 
 
-Bugs reporting/tracking: [Github Repo Issues](https://github.com/jabranr/fetchwitter/issues)
+Issues reporting/tracking: [Github Repo Issues](https://github.com/jabranr/fetchwitter/issues)
 
 **Contributions are welcome!**
 In order to contribute, fork the repository, create a new branch and after when you have a contribution ready then make a pull request. I will be reviewed and merged with contributor's credit. To keep track of the updates and contribution history, no branch will be removed.
