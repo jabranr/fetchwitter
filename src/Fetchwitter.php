@@ -21,13 +21,13 @@ class Fetchwitter {
 	public function __construct( $config = array() ) {
 		
 		if ( !isset( $config ) || ! count( $config ) )
-			throw new Exception('Error 100: Configurations not found.');
+			throw new Exception('Error 100: Fetchwitter is not properly configured.');
 
 		if ( ! isset($config['api_key']) || empty($config['api_key']) )
-			throw new Exception('Error 101: Twitter API key is required.');
+			throw new Exception('Error 101: A valid Twitter API key is required.');
 
 		if ( ! isset($config['api_secret']) || empty($config['api_secret']) )
-			throw new Exception('Error 102: Twitter API secret is required.');
+			throw new Exception('Error 102: A valid Twitter API secret is required.');
 
 		$this->_count = (isset($config['count']) && $config['count']) ? (int)$config['count'] : 10;
 
