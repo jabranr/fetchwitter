@@ -16,6 +16,49 @@ This new PHP class is far better than the existing PHP wrapper in many ways such
 
 ## Documentation
 
+### Basic Example
+
+Here is a very basic example to start with.
+
+``` php
+// Configurations
+$config = array(
+	'api_key' => 'API_KEY_HERE',
+	'api_secret' => 'API_SECRET_HERE'
+);
+
+// Setup a new instance of Fetchwitter
+try {
+	$fw = new Fetchwitter($config);
+}
+catch(Exception $e) {
+	echo $e->getMessage();
+}
+
+// Make sure that you have the instance ready
+if ( isset($fw) && $fw ) {
+	
+	// Get an access token for first time
+	try {
+		$accessToken = $fw->get_new_access_token();
+	}
+	catch(Exception $e) {
+		echo $e->getMessage();
+	}
+
+	# ... OR
+
+	// Assign an existing cached access token
+	$fw->set_access_token($existingAccessToken);
+
+	if ( ! empty($fw->get_access_token()) ) {
+		# do all magic here...
+		# ...
+	}
+}
+
+```
+
 ### Configuration &amp; Initialization
 
 + Register a new app at [Twitter Application Manager](https://apps.facebook.com) and get API key and secret.
@@ -43,15 +86,17 @@ catch(Exception $e) {
 + If this is a fresh setup, then you can get a new access token using following method:
 
 ``` php
-$the_access_token = $fetchwitter->get_new_access_token();
+try {
+	$the_access_token = $fetchwitter->get_new_access_token();
+}
+catch(Exception $e) {
+	echo $e->getMessage();
+}
 ```
 
 + You can set an access token using following method:
 
 ``` php
-# Freshly acquired access token (using above example)
-$fetchwitter->set_access_token( $fetchwitter->get_new_access_token() );
-
 # Already have an access token in cache or database
 $fetchwitter->set_access_token( {access_token} );
 ```

@@ -7,7 +7,7 @@ Version: 1.0.2
 
 + `get_new_access_token` public method is now handled with Exception.
 + `_set_access_token` private method is removed.
-+ 
++ Updated error messages
 
 ===
 
