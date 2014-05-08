@@ -1,4 +1,4 @@
-## Fetchwitter [![Build Status](https://travis-ci.org/jabranr/fetchwitter.svg?branch=master)](https://travis-ci.org/jabranr/fetchwitter)
+## Fetchwitter [![Build Status](https://travis-ci.org/jabranr/Fetchwitter.svg?branch=master)](https://travis-ci.org/jabranr/Fetchwitter)
 
 PHP library to use with Twitter API v1.1
 
