@@ -3,6 +3,14 @@
 PHP library to use with Twitter API v1.1
 
 
+Version: 1.0.3
+
++ Added comments to class.
++ Added `package.json` for version control
++ Updated `.travis.yml`
+
+===
+
 Version: 1.0.2
 
 + `get_new_access_token` public method is now handled with Exception.
