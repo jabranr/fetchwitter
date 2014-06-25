@@ -1,7 +1,6 @@
 <?php
 
 require_once('./src/Fetchwitter.php');
-require_once('./vendor/autoload.php');
 
 class FetchwitterTest extends PHPUnit_Framework_TestCase {	
 	public $fetchwitter, $config;
