@@ -130,6 +130,8 @@ This is a #test tweet by @jabranr to confirm methods from #Fetchwitter. More at 
 
 This is a [#test](https://twitter.com/search?q=%23test) tweet by [@jabranr](https://twitter.com/jabranr) to confirm methods from [#Fetchwitter](https://twitter.com/search?q=%23Fetchwitter). More at [https://github.com/jabranr/fetchwitter](https://github.com/jabranr/fetchwitter)
 
+A [JavaScript version](https://gist.github.com/jabranr/68515719cde0653d641d) is also available.
+
 ===
 
 #### Get Tweets of a Twiiter user
