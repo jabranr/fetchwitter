@@ -5,7 +5,7 @@
  * Fetchwitter enables to search for tweets/hashtags & get a user timeline feed.
  *
  * @author: hello@jabran.me
- * @version: 1.0.3
+ * @version: 1.0.4
  * @license: MIT License
  *
  */
