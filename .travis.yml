@@ -1,8 +1,13 @@
 language: php
 
 php:
+
+  - 5.3 
   - 5.4
+  - 5.5
 
 before_script:
   - git config --global user.name Jabran
   - git config --global user.email hello@jabran.me
+
+script: phpunit --configuration phpunit.xml --coverage-text
