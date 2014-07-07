@@ -4,7 +4,7 @@ PHP framework to fetch tweets from Twitter API v1.1 using OAuth authentication/a
 
 <blockquote>This is an updated and enhanced version of <a href="https://github.com/jabranr/twitter-api-v1.1" target="_blank">existing PHP wrapper</a> to fetch Tweets using <a href="https://dev.twitter.com/docs/api/1.1" target="_blank">Twitter API v1.1</a> (unlike its depreciated API v1) that requires authentication for any kind of requests made to its endpoints.</blockquote>
 
-<blockquote>The authentication flow uses Twiiter’s App-Only Authentication.</blockquote>
+<blockquote>The authentication flow uses Twitter’s App-Only Authentication.</blockquote>
 
 ## Install
 
