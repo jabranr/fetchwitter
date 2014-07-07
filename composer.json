@@ -1,5 +1,5 @@
 {
-    "name": "Fetchwitter",
+    "name": "fetchwitter/Fetchwitter",
     "type": "framework",
     "version": "1.0.5",
     "description": "PHP framework to fetch tweets from Twitter API v1.1 using OAuth authentication/authorization",

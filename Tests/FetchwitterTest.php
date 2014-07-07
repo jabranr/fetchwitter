@@ -6,6 +6,12 @@ class FetchwitterTest extends PHPUnit_Framework_TestCase {
 	public $fetchwitter, $config;
 
 	public function setUp() {
+
+		/** 
+		 * Do NOT use these credentials in your projects as they have 
+		 * limited functionality for testing purpose only.
+		 */
+
 		$this->config = array(
 			'api_key' => 'hqXaOd33grIEIOizaUvpcQ',
 			'api_secret' => 'Kxs68MJGHvtTe9CArjLntsc9iVDEygIfqTJlrcqMhLM'

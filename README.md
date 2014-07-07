@@ -1,10 +1,28 @@
 ## Fetchwitter [![Build Status](https://travis-ci.org/jabranr/Fetchwitter.svg?branch=master)](https://travis-ci.org/jabranr/Fetchwitter)
 
-PHP library to use with Twitter API v1.1
+PHP framework to fetch tweets from Twitter API v1.1 using OAuth authentication/authorization
 
 <blockquote>This is an updated and enhanced version of <a href="https://github.com/jabranr/twitter-api-v1.1" target="_blank">existing PHP wrapper</a> to fetch Tweets using <a href="https://dev.twitter.com/docs/api/1.1" target="_blank">Twitter API v1.1</a> (unlike its depreciated API v1) that requires authentication for any kind of requests made to its endpoints.</blockquote>
 
-<blockquote>The authentication flow only uses the App-Only Authentication.</blockquote>
+<blockquote>The authentication flow uses Twiiter’s App-Only Authentication.</blockquote>
+
+## Install
+
+Fetchwitter can be installed using one of following methods:
+
+#### [Download the latest release](https://github.com/jabranr/Fetchwitter/releases)
+
+#### Use `Bower`
+
+``` shell
+$ bower install fetchwitter
+```
+
+#### Use `Composer`
+
+``` shell
+$ composer install fetchwitter
+```
 
 ## Basic Example
 

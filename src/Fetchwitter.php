@@ -2,12 +2,34 @@
 
 /*!
  * Fetchwitter Class
- * Fetchwitter enables to search for tweets/hashtags & get a user timeline feed.
+ *
+ * PHP framework to fetch tweets from Twitter API v1.1 using OAuth authentication/authorization.
+ * Fetchwitter provides easy to use methods for tweets/hashtags search & user timeline feed.
  *
  * @author: hello@jabran.me
- * @version: 1.0.4
+ * @version: 1.0.5
  * @license: MIT License
  *
+ * License: MIT License
+ *
+ * Copyright (c) 2014 Jabran Rafique
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
+ * and associated documentation files (the "Software"), to deal in the Software without restriction, 
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, 
+ * subject to the following conditions: The above copyright notice and this permission notice shall be included 
+ * in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY 
+ * OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS 
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE 
+ * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ */
+
+
+/**
+ * Fetchwitter class
  */
 
 class Fetchwitter {
@@ -68,7 +90,7 @@ class Fetchwitter {
 
 	/**
 	 * Method to get current set access token
-	 * @return: String access_token
+	 * @return: String
 	 */
 	
 	public function get_access_token() {
@@ -238,13 +260,31 @@ class Fetchwitter {
 		return false;
 	}
 
+
+	/**
+	 * Private method to use PHP CURL Extension.
+	 * Throws exceptions if CURL not found.
+	 * @return: String | Mix
+	 */
+	
 	private function _do_curl( $options = array() ) {
+		
+		if ( ! in_array('curl', get_loaded_extensions()) )
+			throw new Exception('CURL extension is required.');
+
 		$ch = curl_init();
 		curl_setopt_array($ch, $options);
 		$output = curl_exec($ch);
 		curl_close($ch);
 		return $output;
 	}
+
+
+	/**
+	 * Private method to format links in a string
+	 * @param: String $text
+	 * @return: String
+	 */
 
 	private function _do_links( $text ) {
 		$urlRegEx = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/i";
@@ -256,6 +296,13 @@ class Fetchwitter {
 		return $text;
 	}
 
+
+	/**
+	 * Private method to format @mentions in a string
+	 * @param: String $text
+	 * @return: String
+	 */
+
 	private function _do_mentions( $text ) {
 		$mentionRegEx = "/@([A-Z0-9_])+/i";
 		if ( preg_match($mentionRegEx, $text, $mention) ) {
@@ -265,6 +312,13 @@ class Fetchwitter {
 		}
 		return $text;
 	}
+
+
+	/**
+	 * Private method to format #hashtags in a string
+	 * @param: String $text
+	 * @return: String
+	 */
 
 	private function _do_hashtags( $text ) {
 		$hashtagRegEx = "/#([A-Z0-9_])+/i";

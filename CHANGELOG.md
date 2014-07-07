@@ -1,7 +1,20 @@
 ## Fetchwitter Change Log
 
-PHP library to use with Twitter API v1.1
+PHP framework to fetch tweets from Twitter API v1.1 using OAuth authentication/authorization
 
+
+Version: 1.0.5
+
++ Available using [Composer](http://getcomposer.org)
++ More annotated code
+
+===
+
+Version: 1.0.4
+
++ Unit Test added with Travis CI
+
+===
 
 Version: 1.0.3
 

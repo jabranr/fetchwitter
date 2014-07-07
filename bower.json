@@ -1,0 +1,22 @@
+{
+  "name": "fetchwitter",
+  "version": "1.0.5",
+  "homepage": "https://github.com/jabranr/Fetchwitter",
+  "authors": [
+    "Jabran Rafique <hello@jabran.me>"
+  ],
+  "main": "src/",
+  "keywords": [
+    "php",
+    "twitter-api",
+    "api"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
