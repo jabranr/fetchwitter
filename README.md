@@ -12,16 +12,28 @@ Fetchwitter can be installed using one of following methods:
 
 #### [Download the latest release](https://github.com/jabranr/Fetchwitter/releases)
 
-#### Use `Bower`
+#### Using Bower
 
 ``` shell
 $ bower install fetchwitter
 ```
 
-#### Use `Composer`
+#### Using Composer
+
+Add as dependency into your `composer.json` file.
+
+``` json
+{
+	"require": {
+		"fetchwitter/fetchwitter": "1.0.5"
+	}
+}
+```
+
+Use [Composer](http://getcomposer.org) to install.
 
 ``` shell
-$ composer install fetchwitter
+$ composer isntall
 ```
 
 ## Basic Example
