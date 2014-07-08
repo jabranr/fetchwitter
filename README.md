@@ -27,7 +27,7 @@ Add as dependency into your `composer.json` file.
 ``` json
 {
 	"require": {
-		"fetchwitter/fetchwitter": "1.0.5"
+		"fetchwitter/fetchwitter": "~1.0.4"
 	}
 }
 ```

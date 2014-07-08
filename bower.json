@@ -1,9 +1,9 @@
 {
   "name": "Fetchwitter",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "homepage": "https://github.com/jabranr/Fetchwitter",
   "authors": [
-    "Jabran Rafique <hello@jabran.me>"
+   "Jabran Rafique <hello@jabran.me>"
   ],
   "main": "src/",
   "keywords": [
@@ -14,6 +14,7 @@
   "license": "MIT",
   "ignore": [
     "**/.*",
+    "branding",
     "node_modules",
     "bower_components",
     "test",
