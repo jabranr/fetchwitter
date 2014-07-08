@@ -164,7 +164,7 @@ A [JavaScript version](https://gist.github.com/jabranr/68515719cde0653d641d) is 
 
 ===
 
-#### Get Tweets of a Twiiter user
+#### Get Tweets of a Twitter user
 
 You can use the method `get_by_user( $screen_name, $count )` to fetch the list of Tweets for a given user. The method accepts two parameters as follows:
 
