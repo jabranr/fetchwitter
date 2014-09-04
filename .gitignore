@@ -1,5 +1,3 @@
 .DS_Store
-examples
-vendor
-bower_components
-branding/*.psd
+examples/
+vendor/

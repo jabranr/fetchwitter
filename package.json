@@ -1,11 +1,11 @@
 {
     "name": "Fetchwitter",
     "type": "framework",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "description": "PHP framework to fetch tweets from Twitter API v1.1 using OAuth authentication/authorization",
     "keywords": ["twitter","twitter-api", "oauth", "fetch-tweets", "php"],
     "homepage": "http://git.io/fetchwitter",
-    "license": "MIT",
+    "license": "MIT License",
     "authors": [
         {
             "name": "Jabran Rafique",
@@ -15,7 +15,7 @@
     ],
     "require": {
         "php": ">=5.3.0"
-    }
+    },
     "ignore": [
         "**/.*",
         "branding",
