@@ -1,4 +1,4 @@
-## Fetchwitter [![Build Status](https://travis-ci.org/jabranr/Fetchwitter.svg?branch=master)](https://travis-ci.org/jabranr/Fetchwitter) [![Latest Stable Version](https://poser.pugx.org/fetchwitter/fetchwitter/v/stable.svg)](https://packagist.org/packages/fetchwitter/fetchwitter) [![Total Downloads](https://poser.pugx.org/fetchwitter/fetchwitter/downloads.svg)](https://packagist.org/packages/fetchwitter/fetchwitter)
+## Fetchwitter [![Build Status](https://travis-ci.org/jabranr/fetchwitter.svg?branch=master)](https://travis-ci.org/jabranr/fetchwitter) [![Latest Stable Version](https://poser.pugx.org/fetchwitter/fetchwitter/v/stable.svg)](https://packagist.org/packages/fetchwitter/fetchwitter) [![Total Downloads](https://poser.pugx.org/fetchwitter/fetchwitter/downloads.svg)](https://packagist.org/packages/fetchwitter/fetchwitter)
 
 ![Fetchwitter](branding/fetchwitter-512x288.png)
 
