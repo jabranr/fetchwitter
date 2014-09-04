@@ -4,21 +4,13 @@
 
 PHP framework to fetch tweets from Twitter API v1.1 using OAuth authentication/authorization
 
-<blockquote>This is an updated and enhanced version of <a href="https://github.com/jabranr/twitter-api-v1.1" target="_blank">existing PHP wrapper</a> to fetch Tweets using <a href="https://dev.twitter.com/docs/api/1.1" target="_blank">Twitter API v1.1</a> (unlike its depreciated API v1) that requires authentication for any kind of requests made to its endpoints.</blockquote>
-
 <blockquote>The authentication flow uses Twitter’s App-Only Authentication.</blockquote>
 
 ## Install
 
 Fetchwitter can be installed using one of following methods:
 
-#### [Download the latest release](https://github.com/jabranr/Fetchwitter/releases)
-
-#### Using Bower
-
-``` shell
-$ bower install fetchwitter
-```
+#### [Download latest release](https://github.com/jabranr/Fetchwitter/releases)
 
 #### Using Composer
 
@@ -35,7 +27,7 @@ Add as dependency into your `composer.json` file.
 Use [Composer](http://getcomposer.org) to install.
 
 ``` shell
-$ composer isntall
+$ composer install
 ```
 
 ## Basic Example
