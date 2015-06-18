@@ -8,7 +8,7 @@
  * search, or fetch a user timeline feed.
  *
  * @author: Jabran Rafique <hello@jabran.me>
- * @version: 1.0.8
+ * @version: 1.0.9
  * @license: MIT License
  *
  * License: MIT License
@@ -298,8 +298,9 @@ class Fetchwitter {
 	 * @return string
 	 */
 	public function getApiEndpoint() {
-		if ( ! empty($this->getEndpoint()) ) {
-			return sprintf("%s/%s/%s", self::API_URI, self::API_VERSION, $this->getEndpoint());
+$endpoint = $this->getEndpoint();
+		if ( ! empty($endpoint) ) {
+			return sprintf("%s/%s/%s", self::API_URI, self::API_VERSION, $endpoint);
 		}
 		return sprintf("%s/%s", self::API_URI, self::API_VERSION);
 	}
