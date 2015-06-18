@@ -30,14 +30,16 @@ require 'path/to/vendor/fetchwitter/autoload.php'
 ```
 
 ## Basic Example
-Here is a very basic example to start with.
+The instance initialization automatically fetches the access token using OAuth flow and makes it available to the class. An existing access token can also be set manually as follow.
 
-Setup a new Fetchwitter instance. The configuration arguments can be passed as string, indexed array or associative array.
+The configuration arguments can be passed as string, indexed array or associative array. Basically 2 arguments are required that are API Key and Secret. If you already have an access token you can optionally pass it as third parameter to bypass the automatic OAuth flow and make API calls using your access token. Here is a very basic example to start with.
 
+Pass arguments as associative array:
 ``` php
 $config = array(
 	'api_key' => 'API_KEY',
-	'api_secret' => 'API_SECRET'
+	'api_secret' => 'API_SECRET',
+	'access_token' => 'ACCESS_TOKEN', // optional
 );
 
 try {
@@ -49,9 +51,9 @@ catch(Exception $e) {
 
 ```
 
-or  
+or pass arguments as indexed array:
 ```php
-$config = array('API_KEY', 'API_SECRET');
+$config = array( 'API_KEY', 'API_SECRET', 'ACCESS_TOKEN' /* optional */ );
 
 try {
 	$fw = new Fetchwitter($config);
@@ -62,32 +64,15 @@ catch(Exception $e) {
 
 ```
 
-or 
+or pass arguments as strings:
 ```php
 try {
-	$fw = new Fetchwitter('API_KEY', 'API_SECRET');
+	$fw = new Fetchwitter( 'API_KEY', 'API_SECRET', 'ACCESS_TOKEN' /* optional */ );
 }
 catch(Exception $e) {
 	echo $e->getMessage();
 }
-
 ```
-
-The initialization automatically fetches the access token using OAuth flow and makes it available to the class. An existing access token can also be set manually as follow.
-
-```php
-if ( isset($fw) && $fw->getHttpCode() === 200 ) {
-	
-	// Assign an existing cached access token
-	$fw->setAccessToken($anExistingAccessToken);
-
-	// OR start making API requests
-
-}
-
-```
-
-## Documentation
 
 ### Configuration &amp; Initialization
 
@@ -114,17 +99,13 @@ $fw->get('search/tweets', array(
 );
 ```
 
-
-===
-
-### How it works?
 Once a valid instance of Fetchwitter is created, it automatically goes through an [App-Only Authentication](https://dev.twitter.com/docs/auth/application-only-auth) and gets a valid `access_token` from Twitter API or returns appropriate error message in case of failure. 
 
 <blockquote>The method will throw an Exception in case of any missing parameters or returns error message from API in JSON format otherwise.</blockquote>
 
 Following methods are available for a valid and successfully established connection with API.
 
-#### Converts a static Tweet to formatted Tweet
+### Helper method `toTweet()`
 Use `toTweet( $text )` method to convert the static Tweet to formatted Tweet with Mentions, Hashtags and Links properly linked. The method takes the Tweet in string format as parameter and returns a formatted Tweet.
 
 **Use:**

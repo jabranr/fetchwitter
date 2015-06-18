@@ -81,11 +81,7 @@ class Fetchwitter {
 			throw new Exception('A required argument is missing.');
 		}
 
-		$this->setBody(null);
-		$this->setHttpCode(400);
-		$this->_setCredential($args);
-		$this->_refreshAccessToken();
-		return $this;
+		return $this->_setCredential($args);
 	}
 
 	/**
@@ -95,6 +91,7 @@ class Fetchwitter {
 	 * @return class|object
 	 */
 	private function _setCredential($config) {
+
 		if (array_key_exists('api_key', $config)) {
 			$this->setKey($config['api_key']);
 		}
@@ -109,6 +106,24 @@ class Fetchwitter {
 			$this->setSecret($config[1]);
 		}
 
+		if ( count($config) > 2 ) {
+			if (array_key_exists('access_token', $config)) {
+				$this->setAccessToken($config['access_token']);
+			}
+			else {
+				$this->setAccessToken($config[2]);
+			}
+			$this->setHttpCode(200);
+		}
+		else {
+			$this->setHttpCode(400);
+			$this->setAccessToken(null);
+		}
+
+		$this->setBody(null);
+
+		if ( null === $this->getAccessToken() )
+			return $this->_refreshAccessToken();
 		return $this;
 	}
 
