@@ -14,23 +14,34 @@ class FetchwitterTest extends PHPUnit_Framework_TestCase {
 		unset( $this->fetchwitter );
 	}
 
-	public function testConfigProvided() {
-		$this->assertTrue( isset( $this->config ) );
+	/**
+	 * @expectedException Exception
+	 */
+	public function testNoArgumentsException() {
+		$this->fetchwitter = new Fetchwitter();
 	}
 
-	public function testAPIKeyIsSet() {
-		$this->assertArrayHasKey( 'api_key', $this->config );
+	/**
+	 * @expectedException Exception
+	 * @expectedExceptionMessage Fetchwitter is not properly configured.
+	 */
+	public function testNoArgumentsExceptionMessage() {
+		$this->fetchwitter = new Fetchwitter();
 	}
 
-	public function testAPISecretIsSet() {
-		$this->assertArrayHasKey( 'api_secret', $this->config );
+	/**
+	 * @expectedException Exception
+	 * @expectedExceptionMessage A required argument is missing.
+	 */
+	public function testFewArgumentsExceptionMessage() {
+		$this->fetchwitter = new Fetchwitter('API_KEY');
 	}
 
 	/**
 	 * @dataProvider testCaseTweetsForToTweetMethod
 	 */
-
 	public function testToTweet($staticTweet, $formattedTweet) {
+		if ( ! $this->fetchwitter ) return;
 		$resultTweet = $this->fetchwitter->toTweet( $staticTweet );
 		$this->assertEquals($resultTweet, $formattedTweet);
 	}
