@@ -2,22 +2,12 @@
 
 require_once('./src/Fetchwitter.php');
 
-class FetchwitterTest extends PHPUnit_Framework_TestCase {	
+class FetchwitterTest extends PHPUnit_Framework_TestCase {
 	public $fetchwitter, $config;
 
 	public function setUp() {
-
-		/** 
-		 * Do NOT use these credentials in your projects as they have 
-		 * limited functionality for testing purpose only.
-		 */
-
-		$this->config = array(
-			'api_key' => 'hqXaOd33grIEIOizaUvpcQ',
-			'api_secret' => 'Kxs68MJGHvtTe9CArjLntsc9iVDEygIfqTJlrcqMhLM'
-		);
-		$this->fetchwitter = new Fetchwitter( $this->config );
-		$this->fetchwitter->set_access_token($this->fetchwitter->get_new_access_token());
+		$this->config = array();
+		$this->fetchwitter = null;
 	}
 
 	public function tearDown() {
@@ -41,7 +31,7 @@ class FetchwitterTest extends PHPUnit_Framework_TestCase {
 	 */
 
 	public function testToTweet($staticTweet, $formattedTweet) {
-		$resultTweet = $this->fetchwitter->to_tweet( $staticTweet );
+		$resultTweet = $this->fetchwitter->toTweet( $staticTweet );
 		$this->assertEquals($resultTweet, $formattedTweet);
 	}
 

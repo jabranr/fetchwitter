@@ -12,9 +12,7 @@
 spl_autoload_register(function( $class )	{
 
 	$prefix = '';
-
-	$base_dir = defined('FETCHWITTER_SRC_DIR') ? FETCHWITTER_SRC_DIR : dirname(__FILE__);
-
+	$base_dir = defined('FETCHWITTER_SRC_DIR') ? FETCHWITTER_SRC_DIR : dirname(__FILE__) . '/src';
 	$len = strlen($prefix);
 
 	if ( strncmp($prefix, $class, $len) !== 0 ) {
@@ -22,11 +20,10 @@ spl_autoload_register(function( $class )	{
 	}
 
 	$rel_class = substr($class, $len);
-
 	$file = $base_dir . DIRECTORY_SEPARATOR . str_replace('\\', '/', $rel_class) . '.php';
-	
+
 	if ( file_exists($file) ) {
 		require $file;
 	}
-	
+
 });

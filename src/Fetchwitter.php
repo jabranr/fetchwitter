@@ -1,330 +1,552 @@
 <?php
 
-/*!
+/**
  * Fetchwitter Class
  *
- * PHP framework to fetch tweets from Twitter API v1.1 using OAuth authentication/authorization.
- * Fetchwitter provides easy to use methods for tweets/hashtags search & user timeline feed.
+ * PHP library to fetch tweets from Twitter API v1.1 using OAuth authentication/authorization.
+ * Fetchwitter provides easy to use methods for basic functionality such as tweets or hashtag
+ * search, or fetch a user timeline feed.
  *
- * @author: hello@jabran.me
- * @version: 1.0.7
+ * @author: Jabran Rafique <hello@jabran.me>
+ * @version: 1.0.8
  * @license: MIT License
  *
  * License: MIT License
- *
- * Copyright (c) 2014 Jabran Rafique
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
- * and associated documentation files (the "Software"), to deal in the Software without restriction, 
- * including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, 
- * subject to the following conditions: The above copyright notice and this permission notice shall be included 
- * in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY 
- * OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS 
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE 
- * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions: The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY
+ * OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+ * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 
-
-/**
- * Fetchwitter class
- */
-
 class Fetchwitter {
 
+	const API_VERSION = '1.1';
+	const TWITTER_URI = 'https://twitter.com';
+	const API_URI = 'https://api.twitter.com';
+	const OAUTH_ENDPOINT = '/oauth2/token';
+	const USERAGENT = 'Fetchwitter (+https://github.com/jabranr/fetchwitter)';
+	const URL_REGEX = '/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/i';
+	const MENTION_REGEX = '/@([A-Z0-9_])+/i';
+	const HASHTAG_REGEX = '/#([A-Z0-9_])+/i';
+
+	/** @var string $key Twitter API app key */
+	protected $key;
+
+	/** @var string $secret Twitter API app secret */
+	protected $secret;
+
+	/** @var string $accessToken Twitter API app access token */
+	protected $accessToken;
+
+	/** @var string $_api_endpoint Twitter API endpoint */
+	protected $endpoint;
+
+	/** @var int $httpCode HTTP code */
+	protected $httpCode;
+
+	/** @var float $requestTime CURL transfer total time */
+	protected $requestTime;
+
+	/** @var array $headers Response headers */
+	protected $headers;
+
+	/** @var mixed $data Response body */
+	protected $data;
 
 	/**
-	 * Setup the class variables
-	 */
-	
-	private $_api_key,
-			$_api_secret,
-			$_access_token,
-			$_api_version,
-			$_api_url,
-			$_app_oauth_endpoint,
-			$_api_endpoint,
-			$_count;
-
-
-	/**
-	 * Setup class constructor method
+	 * Constructor
 	 *
-	 * @param: Array $config takes set of 3 parameters (String api_key, String api_secret, Integer count)
-	 * @return: Exception on missing/misconfigured paramters
+	 * @param array|string
+	 * @throws Exception
 	 */
+	public function __construct() {
+		$args = func_get_args();
 
-	public function __construct( $config = array() ) {
-		
-		if ( !isset( $config ) || ! count( $config ) )
-			throw new Exception('Error 100: Fetchwitter is not properly configured.');
-
-		if ( ! isset($config['api_key']) || empty($config['api_key']) )
-			throw new Exception('Error 101: A valid Twitter API key is required.');
-
-		if ( ! isset($config['api_secret']) || empty($config['api_secret']) )
-			throw new Exception('Error 102: A valid Twitter API secret is required.');
-
-		$this->_count = (isset($config['count']) && $config['count']) ? (int)$config['count'] : 10;
-
-		$this->_api_key = $config['api_key'];
-		$this->_api_secret = $config['api_secret'];
-		$this->_api_version = '/1.1';
-		$this->_api_url = 'https://api.twitter.com';
-		$this->_app_oauth_endpoint = '/oauth2/token';
-		$this->_api_endpoint = $this->_api_url . $this->_api_version;
-	}
-
-
-	/**
-	 * Method to setup an access token manually
-	 * @param: String $access_token
-	 */
-
-	public function set_access_token( $access_token ) {
-		return $this->_access_token = $access_token;
-	}
-
-
-	/**
-	 * Method to get current set access token
-	 * @return: String
-	 */
-	
-	public function get_access_token() {
-		return $this->_access_token;
-	}
-
-
-	/**
-	 * Method to request a fresh access token from Twitter API
-	 * @return: Boolean
-	 */
-	
-	public function get_new_access_token() {
-		return $this->_get_access_token();
-	}
-
-
-	/**
-	 * Method to get user timeline feed
-	 * @param: String $screen_name
-	 * @param: Integer $count
-	 * @return: Object | Boolean
-	 */
-	
-	public function get_by_user( $screen_name = '@jabranr', $count = 10 ) {
-		$this->_count = $count;
-		$endpoint = $this->_api_endpoint . '/statuses/user_timeline.json';
-		$options = array(
-			CURLOPT_HEADER => false,
-			CURLOPT_HTTPHEADER => array(
-				'Authorization: Bearer ' . $this->_access_token
-			),
-			CURLOPT_URL => $endpoint . '?screen_name=' . preg_replace('/@/', '', $screen_name) . '&count=' . $this->_count,
-			CURLOPT_RETURNTRANSFER => true
-		);
-		$response = $this->_do_curl( $options );
-		if ( $response )
-			return $response;
-		return false;
-	}
-
-
-	/**
-	 * Method to get result of a search
-	 * @param: Array $options takes 2 parameters (String q, String result_type)
-	 * @return: Object | Boolean
-	 */
-	
-	public function search_tweets( $options = array('q' => '#WebDevelopment', 'result_type' => 'recent') ) {
-
-		// Remove all hash signs
-		$options['q'] = preg_replace('/#/', '', $options['q']);
-
-		// Replace with one at the beginning
-		$options['q'] = '#' . $options['q'];
-
-		// Setup API endpoint for tweet search
-		$endpoint = $this->_api_endpoint . '/search/tweets.json';
-
-		// Setup curl options
-		$curl_options = array(
-			CURLOPT_HEADER => false,
-			CURLOPT_HTTPHEADER => array(
-				'Authorization: Bearer ' . $this->_access_token
-			),
-			CURLOPT_RETURNTRANSFER => true
-		);
-
-		// Verify if options array is set
-		if ( isset($options) && count($options) > 0 ) {
-
-			// Verify if query parameter is set
-			if ( isset($options['q']) && $options['q'] ) {
-
-				// Set the maximum limit for tweets
-				if ( ! isset($options['count']) )
-					$options['count'] = $this->_count;
-
-				// Build up tweet search query
-				$curl_options[CURLOPT_URL] = $endpoint . '?' . http_build_query($options);
-			}
-
-			// Setup curl options if query is passed from pagination paramaters
-			else if ( isset($options['query']) && $options['query'] ) {
-				$curl_options[CURLOPT_URL] = $endpoint . $options['query'];
-			}
-		}
-		
-		if ( $response = $this->_do_curl( $curl_options ) )
-			return $response;
-		return false;
-	}
-
-
-	/**
-	 * Method to convert tweet text to formatted tweet
-	 * @param: String $text
-	 * @return: String
-	 */
-
-	public function to_tweet( $text ) {
-		return $this->_do_hashtags( $this->_do_mentions( $this->_do_links( $text ) ) );
-	}
-
-
-	/**
-	 * Method to get tweet length
-	 * @param: $tweet
-	 * @return: Integer
-	 */
-
-	public function tweet_length( $tweet ) {
-		return strlen( $tweet );
-	}
-
-
-	/**
-	 * Class magic destruct method
-	 * @return: Boolean
-	 */
-	
-	public function __destruct() {
-		return true;
-	}
-
-
-	/**
-	 * Private method to request access token from Twitter API
-	 * @return: String | Exception | Boolean
-	 */
-	
-	private function _get_access_token() {
-
-		// Setup curl options
-		$options = array(
-			CURLOPT_POSTFIELDS => array(
-				'grant_type' => 'client_credentials'
-			),
-			CURLOPT_HTTPHEADER => array(
-				'Authorization: Basic ' . base64_encode( $this->_api_key . ':' . $this->_api_secret ) 
-			),
-			CURLOPT_HEADER => false,
-			CURLOPT_URL => $this->_api_url . $this->_app_oauth_endpoint,
-			CURLOPT_RETURNTRANSFER => true
-		);
-
-		// Execute curl
-		$response = $this->_do_curl( $options );
-
-		// Verify if there is response then decode
-		if ( $response ) {
-			$response = json_decode($response);
-
-			// Verify if valid token type was recieved
-			if ( property_exists($response, 'token_type') && $response->token_type === 'bearer' ) {
-				return $this->_access_token = $response->access_token;
-			}
-
-			// Otherwise throw Exception with error and message
-			else if ( property_exists($response, 'errors') ) {
-				throw new Exception($response->errors[0]->code . ': ' . $response->errors[0]->message);
-				return;
-			}
+		if ( ! count($args) ) {
+			throw new Exception('Fetchwitter is not properly configured.');
 		}
 
-		// Return false on rest
-		return false;
+		if ( is_array($args[0]) ) {
+			$args = $args[0];
+		}
+
+		if ( count($args) < 2 ) {
+			throw new Exception('A required argument is missing.');
+		}
+
+		$this->setBody(null);
+		$this->setHttpCode(400);
+		$this->_setCredential($args);
+		$this->_refreshAccessToken();
+		return $this;
+	}
+
+	/**
+	 * Setup credential
+	 *
+	 * @param array $config
+	 * @return class|object
+	 */
+	private function _setCredential($config) {
+		if (array_key_exists('api_key', $config)) {
+			$this->setKey($config['api_key']);
+		}
+		else {
+			$this->setKey($config[0]);
+		}
+
+		if (array_key_exists('api_secret', $config)) {
+			$this->setSecret($config['api_secret']);
+		}
+		else {
+			$this->setSecret($config[1]);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Set API key
+	 * @param string $key
+	 * @return class|object
+	 */
+	public function setKey($key) {
+		$this->key = $key;
+		return $this;
+	}
+
+	/**
+	 * Get API key
+	 * @return string
+	 */
+	public function getKey() {
+		return $this->key;
+	}
+
+	/**
+	 * Set API secret
+	 * @param string $secret
+	 * @return class|object
+	 */
+	public function setSecret($secret) {
+		$this->secret = $secret;
+		return $this;
+	}
+
+	/**
+	 * Get API secret
+	 * @return string
+	 */
+	public function getSecret() {
+		return $this->secret;
+	}
+
+	/**
+	 * Set an access token
+	 *
+	 * @param string $accessToken
+	 * @return class|object
+	 */
+	public function setAccessToken( $accessToken ) {
+		$this->accessToken = $accessToken;
+		return $this;
+	}
+
+	/**
+	 * Get the access token
+	 *
+	 * @return string
+	 */
+	public function getAccessToken() {
+		return $this->accessToken;
+	}
+
+	/**
+	 * Get the HTTP code
+	 *
+	 * @return int
+	 */
+	public function getHttpCode() {
+		return $this->httpCode;
+	}
+
+	/**
+	 * Set the HTTP code
+	 *
+	 * @param int $httpCode
+	 * @return class|object
+	 */
+	public function sethttpCode($httpCode) {
+		$this->httpCode = (int) $httpCode;
+		return $this;
+	}
+
+	/**
+	 * Get request total time
+	 *
+	 * @return float
+	 */
+	public function getRequestTime() {
+		return $this->requestTime;
+	}
+
+	/**
+	 * Set request total time
+	 *
+	 * @param float $requestTime
+	 * @return class|object
+	 */
+	public function setRequestTime($requestTime) {
+		$this->requestTime = (float) $requestTime;
+		return $this;
+	}
+
+	/**
+	 * Get endpoint
+	 *
+	 * @return string
+	 */
+	public function getEndpoint() {
+		return $this->endpoint;
+	}
+
+	/**
+	 * Set an endpoint
+	 *
+	 * @param string $endpoint
+	 * @return class|object
+	 */
+	public function setEndpoint($endpoint) {
+		$this->endpoint = (string) $endpoint;
+		return $this;
+	}
+
+	/**
+	 * Get the response headers
+	 *
+	 * @return array
+	 */
+	public function getHeaders() {
+		return $this->headers;
+	}
+
+	/**
+	 * Set the response headers
+	 *
+	 * @param array $responseHeaders
+	 * @return class|object
+	 */
+	public function setHeaders($responseHeaders) {
+		$this->headers = (array) $responseHeaders;
+		return $this;
+	}
+
+	/**
+	 * Get the response body
+	 *
+	 * @return array
+	 */
+	public function getBody() {
+		return $this->data;
+	}
+
+	/**
+	 * Set the response body
+	 *
+	 * @param array $responseHeaders
+	 * @return class|object
+	 */
+	public function setBody($responseBody) {
+		$this->data = $responseBody;
+		return $this;
+	}
+
+	/**
+	 * Get the oauth endpoint
+	 *
+	 * @return string
+	 */
+	public function getOAuthEndpoint() {
+		return sprintf("%s%s", self::API_URI, self::OAUTH_ENDPOINT);
+	}
+
+	/**
+	 * Get the API endpoint
+	 *
+	 * @return string
+	 */
+	public function getApiEndpoint() {
+		if ( ! empty($this->getEndpoint()) ) {
+			return sprintf("%s/%s/%s", self::API_URI, self::API_VERSION, $this->getEndpoint());
+		}
+		return sprintf("%s/%s", self::API_URI, self::API_VERSION);
+	}
+
+	/**
+	 * Parse given array of headers
+	 *
+	 * @param string $header
+	 * @return array
+	 */
+	public function parseHeaders($header) {
+		$headers = array();
+		foreach (explode('\r\n', $header) as $line) {
+			if (strpos($line, ':') !== false)	{
+				list($key, $value) = explode(':', $line);
+				$key = str_replace('-', '_', $key);
+				$headers[$key] = trim($value);
+			}
+		}
+		return $headers;
 	}
 
 
 	/**
-	 * Private method to use PHP CURL Extension.
-	 * Throws exceptions if CURL not found.
-	 * @return: String | Mix
+	 * CURL helper method
+	 *
+	 * @param string $url
+	 * @param string $method
+	 * @param string $auth
+	 * @param array $postfields
 	 */
-	
-	private function _do_curl( $options = array() ) {
-		
-		if ( ! in_array('curl', get_loaded_extensions()) )
-			throw new Exception('CURL extension is required.');
+	private function _makeRequest( $url, $method, $auth, $postfields ) {
+		$options = array(
+			CURLOPT_URL => $url,
+			CURLOPT_TIMEOUT => 5,
+			CURLOPT_ENCODING => 'gzip',
+			CURLOPT_CONNECTTIMEOUT => 5,
+			CURLOPT_SSL_VERIFYHOST => 2,
+			CURLOPT_SSL_VERIFYPEER => true,
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_USERAGENT => self::USERAGENT,
+			CURLOPT_HTTPHEADER => array('Accept: application/json', $auth, 'Expect:')
+		);
+
+		switch ($method) {
+			case 'GET':
+				if ( !empty($postfields) ) {
+					$options[CURLOPT_URL] .= '?' . $this->toHttpQuery($postfields);
+				}
+				break;
+
+			case 'POST':
+				$options[CURLOPT_POST] = true;
+				$options[CURLOPT_POSTFIELDS] = $this->toHttpQuery($postfields);
+				break;
+
+			case 'DELETE';
+				$options[CURLOPT_CUSTOMREQUEST] = 'DELETE';
+				if ( !empty($postfields) ) {
+					$options[CURLOPT_URL] .= '?' . $this->toHttpQuery($postfields);
+				}
+				break;
+
+			case 'PUT';
+				$options[CURLOPT_CUSTOMREQUEST] = 'PUT';
+				if ( !empty($postfields) ) {
+					$options[CURLOPT_URL] .= '?' . $this->toHttpQuery($postfields);
+				}
+				break;
+		}
 
 		$ch = curl_init();
 		curl_setopt_array($ch, $options);
-		$output = curl_exec($ch);
+		$response = curl_exec($ch);
+
+		if ( curl_error($ch) > 0 ) {
+			throw new Exception(curl_error($ch), curl_errno($ch));
+		}
+
+		$this->setHttpCode(curl_getinfo($ch, CURLINFO_HTTP_CODE));
+		$this->setRequestTime(curl_getinfo($ch, CURLINFO_TOTAL_TIME));
+
+		$parts = explode('\r\n\r\n', $response);
+		$responseBody = array_pop($parts);
+
+		if ( $this->getHttpCode() === 200 ) {
+			$responseBody = $this->setBody($this->parseResponseBody($responseBody));
+		}
+
+		$responseHeader = array_pop($parts);
+		$this->setHeaders($this->parseHeaders($responseHeader));
+
 		curl_close($ch);
+		return $this;
+	}
+
+	/**
+	 * Get a fresh access token from Twitter API
+	 *
+	 * @return boolean
+	 */
+	private function _refreshAccessToken() {
+		$auth = sprintf('Authorization: Basic %s', $this->encodeCredential());
+		$params = array('grant_type' => 'client_credentials');
+		$response = $this->_makeRequest($this->getOAuthEndpoint(), 'POST', $auth, $params);
+
+		if ($this->getHttpCode() === 200 && array_key_exists('token_type', $this->getBody())) {
+			$this->setAccessToken($this->getBody()->access_token);
+			$this->setBody(null);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Parse response and save to response body
+	 *
+	 * @return class|object
+	 */
+	public function parseResponseBody($responseBody) {
+		if ( ! $responseBody ) return;
+		return json_decode($responseBody);
+	}
+
+	/**
+	 * Convert an array to HTTP query
+	 *
+	 * @param array $arr
+	 * @return string
+	 */
+	public function toHttpQuery($arr) {
+		if ( ! $arr ) return;
+		$keys = $this->rfcUrlencode(array_keys($arr));
+		$values = $this->rfcUrlencode(array_values($arr));
+
+		$arr = array_combine($keys, $values);
+		uksort($arr, 'strcmp');
+		$params = array();
+		foreach ($arr as $key => $value) {
+			$params[] = sprintf('%s=%s', $key, $value);
+		}
+		return implode('&', $params);
+	}
+
+	/**
+	 * RFC3986 urlencode method
+	 *
+	 * @param array|string|mixed $value
+	 * @return array|string|mixed
+	 */
+	public function rfcUrlencode($value) {
+		$output = '';
+
+		if (is_array($value)) {
+			$output = array_map(array($this, 'rfcUrlencode'), $value);
+		}
+		elseif ( is_scalar($value) ) {
+			$output = rawurlencode($value);
+		}
 		return $output;
 	}
 
+	/**
+	 * RFC3986 urldecode method
+	 *
+	 * @param string $string
+	 * @return string
+	 */
+	public function rfcUrldecode($string) {
+		return urldecode($string);
+	}
+
 
 	/**
-	 * Private method to format links in a string
-	 * @param: String $text
-	 * @return: String
+	 * Base64 encode the key and secret
 	 */
+	public function encodeCredential() {
+		return base64_encode( sprintf('%s:%s', $this->getKey(), $this->getSecret()) );
+	}
 
-	private function _do_links( $text ) {
-		$urlRegEx = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/i";
-		if ( preg_match($urlRegEx, $text, $url) ) {
-			$text = preg_replace_callback($urlRegEx, function( $matches ) {
-				return '<a target="_blank" href="' . $matches[0] . '" rel="nofollow">' . $matches[0] . '</a>';
+	/**
+	 * Make an API request
+	 */
+	public function request($method, $endpoint, $params = array()) {
+		$this->setEndpoint($endpoint);
+		$auth = sprintf('Authorization: Bearer %s', $this->getAccessToken());
+		$this->_makeRequest($this->getApiEndpoint(), 'GET', $auth, $params);
+
+		if ( $this->getHttpCode() === 200 ) {
+			return $this->getBody();
+		}
+		return $this;
+	}
+
+	/**
+	 * Make an API GET request
+	 */
+	public function get($endpoint, $params = array()) {
+		return $this->request('GET', $endpoint, $params);
+	}
+
+	/**
+	 * Make an API POST request
+	 */
+	public function post($endpoint, $params = array()) {
+		return $this->request('POST', $endpoint, $params);
+	}
+
+	/**
+	 * Format plain text to formatted tweet
+	 *
+	 * @param string $text
+	 * @return string
+	 */
+	public function toTweet( $text ) {
+		return $this->_formatHashtags(
+			$this->_formatMentions(
+				$this->_formatLinks( $text )
+			)
+		);
+	}
+
+	/**
+	 * Format links in a string
+	 *
+	 * @param string $text
+	 * @return string
+	 */
+	private function _formatLinks( $text ) {
+		if ( preg_match(static::URL_REGEX, $text, $url) ) {
+			$text = preg_replace_callback(static::URL_REGEX, function( $matches ) {
+				return sprintf('<a target="_blank" href="%s" rel="nofollow">%s</a>', $matches[0], $matches[0]);
 			}, $text);
 		}
 		return $text;
 	}
 
-
 	/**
-	 * Private method to format @mentions in a string
-	 * @param: String $text
-	 * @return: String
+	 * Format Twitter Mentions in a string
+	 *
+	 * @param string $text
+	 * @return string
 	 */
-
-	private function _do_mentions( $text ) {
-		$mentionRegEx = "/@([A-Z0-9_])+/i";
-		if ( preg_match($mentionRegEx, $text, $mention) ) {
-			$text = preg_replace_callback($mentionRegEx, function( $matches ) {
-				return '<a target="_blank" href="https://twitter.com/' . substr($matches[0], 1) . '" rel="nofollow">' . $matches[0] . '</a>';
+	private function _formatMentions( $text ) {
+		if ( preg_match(static::MENTION_REGEX, $text, $mention) ) {
+			$text = preg_replace_callback(static::MENTION_REGEX, function( $matches ) {
+				return sprintf('<a target="_blank" href="%s/%s" rel="nofollow">%s</a>', static::TWITTER_URI, $matches[0], $matches[0]);
 			}, $text);
 		}
 		return $text;
 	}
 
-
 	/**
-	 * Private method to format #hashtags in a string
-	 * @param: String $text
-	 * @return: String
+	 * Format Hashtag(s) in a string
+	 *
+	 * @param string $text
+	 * @return string
 	 */
-
-	private function _do_hashtags( $text ) {
-		$hashtagRegEx = "/#([A-Z0-9_])+/i";
-		if ( preg_match($hashtagRegEx, $text, $hashtags) ) {
-			$text = preg_replace_callback($hashtagRegEx, function( $matches ) {
-				return '<a target="_blank" href="https://twitter.com/search?q=' . urlencode($matches[0]) . '" rel="nofollow">' . $matches[0] . '</a>';
+	private function _formatHashtags( $text ) {
+		if ( preg_match(static::HASHTAG_REGEX, $text, $hashtags) ) {
+			$text = preg_replace_callback(static::HASHTAG_REGEX, function( $matches ) {
+				return sprintf('<a target="_blank" href="%s/search?q=%s" rel="nofollow">%s</a>', static::TWITTER_URI, $this->rfcUrlencode($matches[0]), $matches[0]);
 			}, $text);
 		}
 		return $text;

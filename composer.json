@@ -1,7 +1,7 @@
 {
     "name": "fetchwitter/fetchwitter",
     "type": "framework",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "description": "PHP framework to fetch tweets from Twitter API v1.1 using OAuth authentication/authorization",
     "keywords": ["twitter","twitter-api", "oauth", "fetch-tweets", "php"],
     "homepage": "http://git.io/fetchwitter",

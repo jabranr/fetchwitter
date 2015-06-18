@@ -1,48 +1,45 @@
 ## Fetchwitter [![Build Status](https://travis-ci.org/jabranr/fetchwitter.svg?branch=master)](https://travis-ci.org/jabranr/fetchwitter) [![Latest Stable Version](https://poser.pugx.org/fetchwitter/fetchwitter/v/stable.svg)](https://packagist.org/packages/fetchwitter/fetchwitter) [![Total Downloads](https://poser.pugx.org/fetchwitter/fetchwitter/downloads.svg)](https://packagist.org/packages/fetchwitter/fetchwitter) [![Analytics](https://ga-beacon.appspot.com/UA-50688851-1/fetchwitter)](https://github.com/igrigorik/ga-beacon)
 
-![Fetchwitter](branding/fetchwitter-512x288.png)
+PHP library to fetch tweets from Twitter API v1.1 using OAuth authentication/authorization. Fetchwitter provides easy to use methods for basic functionality such as tweets or hashtag search, or fetch a user timeline feed. All you need are Twitter app key and secret to get you going.
 
-PHP framework to fetch tweets from Twitter API v1.1 using OAuth authentication/authorization
-
-<blockquote>The authentication flow uses Twitter’s App-Only Authentication.</blockquote>
+<blockquote>Note: The authentication flow uses Twitter’s App-Only Authentication.</blockquote>
 
 ## Install
-
 Fetchwitter can be installed using one of following methods:
 
-#### [Download latest release](https://github.com/jabranr/Fetchwitter/releases)
+* [Download latest release](https://github.com/jabranr/Fetchwitter/releases/latest)
 
-#### Using Composer
-
+#### Using Composer (Recommended)
 Add as dependency into your `composer.json` file.
-
 ``` json
 {
 	"require": {
-		"fetchwitter/fetchwitter": ">=1.0.6"
+		"fetchwitter/fetchwitter": ">=1.0.8"
 	}
 }
 ```
 
 Use [Composer](http://getcomposer.org) to install.
-
 ``` shell
 $ composer install
 ```
 
-## Basic Example
+Require/include the file into your project
+```php
+require 'path/to/vendor/fetchwitter/autoload.php'
+```
 
+## Basic Example
 Here is a very basic example to start with.
 
+Setup a new Fetchwitter instance. The configuration arguments can be passed as string, indexed array or associative array.
+
 ``` php
-// Configurations
 $config = array(
-	'api_key' => 'API_KEY_HERE',
-	'api_secret' => 'API_SECRET_HERE',
-	'count' => '5'
+	'api_key' => 'API_KEY',
+	'api_secret' => 'API_SECRET'
 );
 
-// Setup a new instance of Fetchwitter
 try {
 	$fw = new Fetchwitter($config);
 }
@@ -50,26 +47,42 @@ catch(Exception $e) {
 	echo $e->getMessage();
 }
 
-// Make sure that you have the instance ready
-if ( isset($fw) && $fw ) {
+```
+
+or  
+```php
+$config = array('API_KEY', 'API_SECRET');
+
+try {
+	$fw = new Fetchwitter($config);
+}
+catch(Exception $e) {
+	echo $e->getMessage();
+}
+
+```
+
+or 
+```php
+try {
+	$fw = new Fetchwitter('API_KEY', 'API_SECRET');
+}
+catch(Exception $e) {
+	echo $e->getMessage();
+}
+
+```
+
+The initialization automatically fetches the access token using OAuth flow and makes it available to the class. An existing access token can also be set manually as follow.
+
+```php
+if ( isset($fw) && $fw->getHttpCode() === 200 ) {
 	
-	// Get an access token for first time
-	try {
-		$accessToken = $fw->get_new_access_token();
-	}
-	catch(Exception $e) {
-		echo $e->getMessage();
-	}
-
-	# ... OR
-
 	// Assign an existing cached access token
-	$fw->set_access_token($existingAccessToken);
+	$fw->setAccessToken($anExistingAccessToken);
 
-	if ( ! empty($fw->get_access_token()) ) {
-		# do all magic here...
-		# ...
-	}
+	// OR start making API requests
+
 }
 
 ```
@@ -79,69 +92,45 @@ if ( isset($fw) && $fw ) {
 ### Configuration &amp; Initialization
 
 + Register a new app at [Twitter Application Manager](https://apps.facebook.com) and get API key and secret.
-+ Initialize a new instance of Fetchwitter as follows:
++ Initialize a new instance of Fetchwitter as explained above.
++ Make API requests as exampled below:
 
-``` php
-$config = array( 
-	'api_key' => API_KEY,
-	'api_secret' => API_SECRET,
-	'count' => 5 // optional, default is 10
+Make any GET request i.e. fetch user timeline
+```php
+$fw->get('statuses/user_timeline', array(
+	'count' => 2,
+	'screen_name' => 'jabranr'
+	)
 );
-
-try {
-	$fetchwitter = new Fetchwitter( array $config );
-}
-catch(Exception $e) {
-	echo $e->getMessage();
-}
 ```
 
-===
-
-### Get or set access token
-
-+ If this is a fresh setup, then you can get a new access token using following method:
-
-``` php
-try {
-	$the_access_token = $fetchwitter->get_new_access_token();
-}
-catch(Exception $e) {
-	echo $e->getMessage();
-}
+Search tweets with a hashtag
+```php
+$fw->get('search/tweets', array(
+	'count' => 2,
+	'q' => '#TwitterAPI',
+	'result_type' => 'recent'
+	)
+);
 ```
 
-+ You can set an access token using following method:
-
-``` php
-# Already have an access token in cache or database
-$fetchwitter->set_access_token( string $existingAccessToken );
-```
-
-+ You can access token from current active instance using following method:
-
-``` php
-$the_access_token = $fetchwitter->get_access_token();
-```
 
 ===
 
 ### How it works?
-
 Once a valid instance of Fetchwitter is created, it automatically goes through an [App-Only Authentication](https://dev.twitter.com/docs/auth/application-only-auth) and gets a valid `access_token` from Twitter API or returns appropriate error message in case of failure. 
 
 <blockquote>The method will throw an Exception in case of any missing parameters or returns error message from API in JSON format otherwise.</blockquote>
 
 Following methods are available for a valid and successfully established connection with API.
 
-#### Converts static Tweet to formatted Tweet
-
-Use `to_tweet( $text )` method to convert the static Tweet to formatted Tweet with Mentions, Hashtags and Links properly linked. The method takes the Tweet in string format as parameter and returns a formatted Tweet.
+#### Converts a static Tweet to formatted Tweet
+Use `toTweet( $text )` method to convert the static Tweet to formatted Tweet with Mentions, Hashtags and Links properly linked. The method takes the Tweet in string format as parameter and returns a formatted Tweet.
 
 **Use:**
 
 ``` php
-$tweet = $fetchwitter->to_tweet( string $tweet );
+$tweet = $fetchwitter->toTweet( string $tweet );
 ```
 
 **Example:**
@@ -150,122 +139,26 @@ $tweet = $fetchwitter->to_tweet( string $tweet );
 
 This is a #test tweet by @jabranr to confirm methods from #Fetchwitter. More at https://github.com/jabranr/fetchwitter
 
-**Formatted Tweet using `to_tweet()` method:**
+**Formatted Tweet using `toTweet()` method:**
 
 This is a [#test](https://twitter.com/search?q=%23test) tweet by [@jabranr](https://twitter.com/jabranr) to confirm methods from [#Fetchwitter](https://twitter.com/search?q=%23Fetchwitter). More at [https://github.com/jabranr/fetchwitter](https://github.com/jabranr/fetchwitter)
 
 A [JavaScript version](https://gist.github.com/jabranr/68515719cde0653d641d) is also available.
 
-===
+#### Disclaimer
+I made this library just for learning purpose and have been improving it. A lot of inspiration has come from [Abraham's comprehensive TwitterOAuth](https://github.com/abraham/twitteroauth) library. If you need a complete Twitter API support then please use Abraham's library instead.
 
-#### Get Tweets of a Twitter user
+#### Issues reporting/tracking
+[Github Repo Issues](https://github.com/jabranr/fetchwitter/issues)
 
-You can use the method `get_by_user( $screen_name, $count )` to fetch the list of Tweets for a given user. The method accepts two parameters as follows:
+#### Contribution
+In order to contribute:
 
-**Use:**
+1. Fork the repository
+2. Create a new branch
+3. Once you are ready then make a pull request
 
-``` php
-get_by_user( string $screen_name, int $count )
-
-$screen_name - // Twitter handle for the user
-$count - // Number of Tweets to fetch (optional, default is 10)
-```
-
-**Example:**
-
-``` php
-$fetchwitter = new Fetchwitter( $config );
-$tweets = $fetchwitter->get_by_user('jabranr', 5);
-
-if ( $tweets ) {
-	$tweets = json_decode($tweets);
-	if ( $tweets && count($tweets) ) {
-		echo '<ul>';
-		foreach( $tweets as $tweet ) {
-			echo '<li>' . $fetchwitter->to_tweet( $tweet->text ) . '</li>';
-			// See above for details on "to_tweet()" method
-		}
-		echo '</ul>';
-	}
-}
-```
-This above example code will produce the unordered list of 5 recent Tweets for user [@jabranr](https://twitter.com/jabranr)
-
-===
-
-#### Get Tweets for a query or hashtag
-
-You can use the method `search_tweets( $params )` to fetch the list of Tweets for a given query i.e. hashtag. The method accepts an array of parameters as follows:
-
-**Use:**
-
-``` php
-search_tweets( array $params )
-
-$params['q'] - // Any query to search relevant Tweets i.e. #London
-$params['count'] - // Number of Tweets to return (The results will be paginated) - (optional, default is 10)
-$params['result_type'] - // Can be any of the three: mixed, recent, popular - (optional, default is recent)
-```
-**Example:**
-
-``` php
-$fetchwitter = new Fetchwitter( $config );
-$params = array(
-	'q' => '#London',
-	'result_type' => 'mixed',
-	'count' => 15
-);
-
-$results = $fetchwitter->search_tweets( $params );
-
-if ( $results ) {
-	$tweets = json_decode($results);
-	if ( $tweets->statuses && count($tweets->statuses) ) {
-		echo '<ul>';
-		foreach( $tweets->statuses as $tweet ) {
-			echo '<li>' . $fetchwitter->to_tweet( $tweet->text ) . '</li>';
-			// See above for details on "to_tweet()" method
-		}
-		echo '</ul>';
-	}
-}
-```
-This above example code will produce the unordered list of 15 mixed Tweets for #London hashtag.
-
-===
-
-#### Paginate through search results
-
-You can use the method `search_tweets( $params )` to paginate through the results of search performed by the same method earlier. The first use of this method produces the `search_metadata` object in return result from API. Use the `next_results` to paginate to next set of results or `previous_results` to previous set of results. The method accepts an array of single parameter as follows:
-
-**Use:**
-
-``` php 
-search_tweets( array $params ) 
-
-$params['query'] - // The query generated by previous search results by Twitter API
-```
-**Example:**
-
-``` php
-
-$params = array(
-	'query' => $tweets->search_metadata->next_results
-	// $tweets from above example
-);
-
-$results = $fetchwitter->search_tweets( $params );
-```
-The predefined query from `search_metadata` property of existing search results set has everything inherited from original settings provided in `$params` array of parameters.
-
-===
-
-
-Issues reporting/tracking: [Github Repo Issues](https://github.com/jabranr/fetchwitter/issues)
-
-**Contributions are welcome!**
-In order to contribute, fork the repository, create a new branch and after when you have a contribution ready then make a pull request. I will be reviewed and merged with contributor's credit. To keep track of the updates and contribution history, no branch will be removed.
-
+#### License
 MIT License - [http://opensource.org/licenses/MIT](http://opensource.org/licenses/MIT)
 
-&copy; [@jabranr](https://twitter.com/jabranr) - 2014
+&copy; [@jabranr](https://twitter.com/jabranr) - 2014-2-15
