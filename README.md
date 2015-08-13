@@ -76,7 +76,7 @@ catch(Exception $e) {
 
 ### Configuration &amp; Initialization
 
-+ Register a new app at [Twitter Application Manager](https://apps.facebook.com) and get API key and secret.
++ Register a new app at [Twitter Application Manager](https://apps.twitter.com) and get API key and secret.
 + Initialize a new instance of Fetchwitter as explained above.
 + Make API requests as exampled below:
 
