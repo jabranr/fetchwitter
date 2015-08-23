@@ -69,15 +69,15 @@ class Fetchwitter {
 	public function __construct() {
 		$args = func_get_args();
 
-		if ( ! count($args) ) {
+		if ( ! count($args)) {
 			throw new Exception('Fetchwitter is not properly configured.');
 		}
 
-		if ( is_array($args[0]) ) {
+		if (is_array($args[0])) {
 			$args = $args[0];
 		}
 
-		if ( count($args) < 2 ) {
+		if (count($args) < 2) {
 			throw new Exception('A required argument is missing.');
 		}
 
@@ -88,7 +88,7 @@ class Fetchwitter {
 	 * Setup credential
 	 *
 	 * @param array $config
-	 * @return class|object
+	 * @return Fetchwitter
 	 */
 	private function _setCredential($config) {
 
@@ -106,7 +106,7 @@ class Fetchwitter {
 			$this->setSecret($config[1]);
 		}
 
-		if ( count($config) > 2 ) {
+		if (count($config) > 2) {
 			if (array_key_exists('access_token', $config)) {
 				$this->setAccessToken($config['access_token']);
 			}
@@ -122,7 +122,7 @@ class Fetchwitter {
 
 		$this->setBody(null);
 
-		if ( null === $this->getAccessToken() )
+		if (null === $this->getAccessToken())
 			return $this->_refreshAccessToken();
 		return $this;
 	}
@@ -130,7 +130,7 @@ class Fetchwitter {
 	/**
 	 * Set API key
 	 * @param string $key
-	 * @return class|object
+	 * @return Fetchwitter
 	 */
 	public function setKey($key) {
 		$this->key = $key;
@@ -148,7 +148,7 @@ class Fetchwitter {
 	/**
 	 * Set API secret
 	 * @param string $secret
-	 * @return class|object
+	 * @return Fetchwitter
 	 */
 	public function setSecret($secret) {
 		$this->secret = $secret;
@@ -167,9 +167,9 @@ class Fetchwitter {
 	 * Set an access token
 	 *
 	 * @param string $accessToken
-	 * @return class|object
+	 * @return Fetchwitter
 	 */
-	public function setAccessToken( $accessToken ) {
+	public function setAccessToken($accessToken) {
 		$this->accessToken = $accessToken;
 		return $this;
 	}
@@ -196,10 +196,10 @@ class Fetchwitter {
 	 * Set the HTTP code
 	 *
 	 * @param int $httpCode
-	 * @return class|object
+	 * @return Fetchwitter
 	 */
 	public function sethttpCode($httpCode) {
-		$this->httpCode = (int) $httpCode;
+		$this->httpCode = (int)$httpCode;
 		return $this;
 	}
 
@@ -216,10 +216,10 @@ class Fetchwitter {
 	 * Set request total time
 	 *
 	 * @param float $requestTime
-	 * @return class|object
+	 * @return Fetchwitter
 	 */
 	public function setRequestTime($requestTime) {
-		$this->requestTime = (float) $requestTime;
+		$this->requestTime = (float)$requestTime;
 		return $this;
 	}
 
@@ -236,10 +236,10 @@ class Fetchwitter {
 	 * Set an endpoint
 	 *
 	 * @param string $endpoint
-	 * @return class|object
+	 * @return Fetchwitter
 	 */
 	public function setEndpoint($endpoint) {
-		$this->endpoint = (string) $endpoint;
+		$this->endpoint = (string)$endpoint;
 		return $this;
 	}
 
@@ -256,10 +256,10 @@ class Fetchwitter {
 	 * Set the response headers
 	 *
 	 * @param array $responseHeaders
-	 * @return class|object
+	 * @return Fetchwitter
 	 */
 	public function setHeaders($responseHeaders) {
-		$this->headers = (array) $responseHeaders;
+		$this->headers = (array)$responseHeaders;
 		return $this;
 	}
 
@@ -275,8 +275,7 @@ class Fetchwitter {
 	/**
 	 * Set the response body
 	 *
-	 * @param array $responseHeaders
-	 * @return class|object
+	 * @return Fetchwitter
 	 */
 	public function setBody($responseBody) {
 		$this->data = $responseBody;
@@ -299,7 +298,7 @@ class Fetchwitter {
 	 */
 	public function getApiEndpoint() {
 $endpoint = $this->getEndpoint();
-		if ( ! empty($endpoint) ) {
+		if ( ! empty($endpoint)) {
 			return sprintf("%s/%s/%s", self::API_URI, self::API_VERSION, $endpoint);
 		}
 		return sprintf("%s/%s", self::API_URI, self::API_VERSION);
@@ -314,7 +313,7 @@ $endpoint = $this->getEndpoint();
 	public function parseHeaders($header) {
 		$headers = array();
 		foreach (explode('\r\n', $header) as $line) {
-			if (strpos($line, ':') !== false)	{
+			if (strpos($line, ':') !== false) {
 				list($key, $value) = explode(':', $line);
 				$key = str_replace('-', '_', $key);
 				$headers[$key] = trim($value);
@@ -332,7 +331,7 @@ $endpoint = $this->getEndpoint();
 	 * @param string $auth
 	 * @param array $postfields
 	 */
-	private function _makeRequest( $url, $method, $auth, $postfields ) {
+	private function _makeRequest($url, $method, $auth, $postfields) {
 		$options = array(
 			CURLOPT_URL => $url,
 			CURLOPT_TIMEOUT => 5,
@@ -347,8 +346,8 @@ $endpoint = $this->getEndpoint();
 
 		switch ($method) {
 			case 'GET':
-				if ( !empty($postfields) ) {
-					$options[CURLOPT_URL] .= '?' . $this->toHttpQuery($postfields);
+				if ( ! empty($postfields)) {
+					$options[CURLOPT_URL] .= '?'.$this->toHttpQuery($postfields);
 				}
 				break;
 
@@ -359,15 +358,15 @@ $endpoint = $this->getEndpoint();
 
 			case 'DELETE';
 				$options[CURLOPT_CUSTOMREQUEST] = 'DELETE';
-				if ( !empty($postfields) ) {
-					$options[CURLOPT_URL] .= '?' . $this->toHttpQuery($postfields);
+				if ( ! empty($postfields)) {
+					$options[CURLOPT_URL] .= '?'.$this->toHttpQuery($postfields);
 				}
 				break;
 
 			case 'PUT';
 				$options[CURLOPT_CUSTOMREQUEST] = 'PUT';
-				if ( !empty($postfields) ) {
-					$options[CURLOPT_URL] .= '?' . $this->toHttpQuery($postfields);
+				if ( ! empty($postfields)) {
+					$options[CURLOPT_URL] .= '?'.$this->toHttpQuery($postfields);
 				}
 				break;
 		}
@@ -376,7 +375,7 @@ $endpoint = $this->getEndpoint();
 		curl_setopt_array($ch, $options);
 		$response = curl_exec($ch);
 
-		if ( curl_error($ch) > 0 ) {
+		if (curl_error($ch) > 0) {
 			throw new Exception(curl_error($ch), curl_errno($ch));
 		}
 
@@ -386,7 +385,7 @@ $endpoint = $this->getEndpoint();
 		$parts = explode('\r\n\r\n', $response);
 		$responseBody = array_pop($parts);
 
-		if ( $this->getHttpCode() === 200 ) {
+		if ($this->getHttpCode() === 200) {
 			$responseBody = $this->setBody($this->parseResponseBody($responseBody));
 		}
 
@@ -400,7 +399,7 @@ $endpoint = $this->getEndpoint();
 	/**
 	 * Get a fresh access token from Twitter API
 	 *
-	 * @return boolean
+	 * @return Fetchwitter
 	 */
 	private function _refreshAccessToken() {
 		$auth = sprintf('Authorization: Basic %s', $this->encodeCredential());
@@ -421,7 +420,7 @@ $endpoint = $this->getEndpoint();
 	 * @return class|object
 	 */
 	public function parseResponseBody($responseBody) {
-		if ( ! $responseBody ) return;
+		if ( ! $responseBody) return;
 		return json_decode($responseBody);
 	}
 
@@ -432,7 +431,7 @@ $endpoint = $this->getEndpoint();
 	 * @return string
 	 */
 	public function toHttpQuery($arr) {
-		if ( ! $arr ) return;
+		if ( ! $arr) return;
 		$keys = $this->rfcUrlencode(array_keys($arr));
 		$values = $this->rfcUrlencode(array_values($arr));
 
@@ -457,7 +456,7 @@ $endpoint = $this->getEndpoint();
 		if (is_array($value)) {
 			$output = array_map(array($this, 'rfcUrlencode'), $value);
 		}
-		elseif ( is_scalar($value) ) {
+		elseif (is_scalar($value)) {
 			$output = rawurlencode($value);
 		}
 		return $output;
@@ -478,18 +477,19 @@ $endpoint = $this->getEndpoint();
 	 * Base64 encode the key and secret
 	 */
 	public function encodeCredential() {
-		return base64_encode( sprintf('%s:%s', $this->getKey(), $this->getSecret()) );
+		return base64_encode(sprintf('%s:%s', $this->getKey(), $this->getSecret()));
 	}
 
 	/**
 	 * Make an API request
+	 * @param string $method
 	 */
 	public function request($method, $endpoint, $params = array()) {
 		$this->setEndpoint($endpoint);
 		$auth = sprintf('Authorization: Bearer %s', $this->getAccessToken());
 		$this->_makeRequest($this->getApiEndpoint(), 'GET', $auth, $params);
 
-		if ( $this->getHttpCode() === 200 ) {
+		if ($this->getHttpCode() === 200) {
 			return $this->getBody();
 		}
 		return $this;
@@ -515,10 +515,10 @@ $endpoint = $this->getEndpoint();
 	 * @param string $text
 	 * @return string
 	 */
-	public function toTweet( $text ) {
+	public function toTweet($text) {
 		return $this->_formatHashtags(
 			$this->_formatMentions(
-				$this->_formatLinks( $text )
+				$this->_formatLinks($text)
 			)
 		);
 	}
@@ -529,9 +529,9 @@ $endpoint = $this->getEndpoint();
 	 * @param string $text
 	 * @return string
 	 */
-	private function _formatLinks( $text ) {
-		if ( preg_match(static::URL_REGEX, $text, $url) ) {
-			$text = preg_replace_callback(static::URL_REGEX, function( $matches ) {
+	private function _formatLinks($text) {
+		if (preg_match(static::URL_REGEX, $text, $url)) {
+			$text = preg_replace_callback(static::URL_REGEX, function($matches) {
 				return sprintf('<a target="_blank" href="%s" rel="nofollow">%s</a>', $matches[0], $matches[0]);
 			}, $text);
 		}
@@ -544,9 +544,9 @@ $endpoint = $this->getEndpoint();
 	 * @param string $text
 	 * @return string
 	 */
-	private function _formatMentions( $text ) {
-		if ( preg_match(static::MENTION_REGEX, $text, $mention) ) {
-			$text = preg_replace_callback(static::MENTION_REGEX, function( $matches ) {
+	private function _formatMentions($text) {
+		if (preg_match(static::MENTION_REGEX, $text, $mention)) {
+			$text = preg_replace_callback(static::MENTION_REGEX, function($matches) {
 				return sprintf('<a target="_blank" href="%s/%s" rel="nofollow">%s</a>', static::TWITTER_URI, $matches[0], $matches[0]);
 			}, $text);
 		}
@@ -559,9 +559,9 @@ $endpoint = $this->getEndpoint();
 	 * @param string $text
 	 * @return string
 	 */
-	private function _formatHashtags( $text ) {
-		if ( preg_match(static::HASHTAG_REGEX, $text, $hashtags) ) {
-			$text = preg_replace_callback(static::HASHTAG_REGEX, function( $matches ) {
+	private function _formatHashtags($text) {
+		if (preg_match(static::HASHTAG_REGEX, $text, $hashtags)) {
+			$text = preg_replace_callback(static::HASHTAG_REGEX, function($matches) {
 				return sprintf('<a target="_blank" href="%s/search?q=%s" rel="nofollow">%s</a>', static::TWITTER_URI, $this->rfcUrlencode($matches[0]), $matches[0]);
 			}, $text);
 		}
